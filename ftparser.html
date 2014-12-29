@@ -1,0 +1,42 @@
+<html>
+<head>
+        <title>Financial Times Parser</title>
+</head>
+<body>
+		<h1> Hi Joanna! Here are your articles. </h1>
+
+        <script type="text/javascript">
+                function httpGet(url)
+				{
+					var xmlHttp = null;
+					xmlHttp = new XMLHttpRequest();
+					xmlHttp.open("GET", url, false);
+					xmlHttp.send(null);
+					return xmlHttp.responseText;
+				}
+
+				var res = JSON.parse(httpGet("http://api.pearson.com:80/v2/ft/articles?limit=25"));
+				var articles = [];
+
+				for(var i = 0; i < res.results.length ; i++)
+				{
+					var result = res.results[i];
+					document.write("<h3>" + res.results[i].headline + "</h3>");
+					var storyBody = JSON.parse(httpGet("http://api.pearson.com:80/v2/ft/articles/" + result.id));
+
+					var date = new Date(result.article_date);
+
+					document.write(date.toLocaleString());
+					document.write("<br>");
+
+					var text = storyBody.result.text;
+					for(var j = 0; j < text.length; j++)
+					{
+						document.write(storyBody.result.text[j] + " ");
+					}
+
+					document.write("<br>");
+				}
+        </script>
+</body>
+</html>
